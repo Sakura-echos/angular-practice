@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CartService } from '../cart.service';
-
+import { FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -9,7 +9,22 @@ import { CartService } from '../cart.service';
 export class CartComponent {
   items = this.cartService.getItems();
 
-  constructor(private cartService: CartService) {}
+  checkoutForm = this.formBuilder.group({
+    name: '',
+    address: '',
+  });
 
-  ngOnInit(): void {}
+  constructor(
+    private cartService: CartService,
+    private formBuilder: FormBuilder
+  ) {}
+
+  onSubmit(): void {
+    // 清空购物车
+    this.items = this.cartService.clearCart();
+    // 提示已下单成功
+    console.warn('Your order has been submitted', this.checkoutForm.value);
+    // 清空form
+    this.checkoutForm.reset();
+  }
 }
